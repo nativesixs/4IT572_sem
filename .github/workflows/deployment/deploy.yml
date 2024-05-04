@@ -18,7 +18,7 @@
     - name: Launch EC2 Instance
       ec2_instance:
         instance_type: t2.medium
-        image_id: ami-04e5276ebb8451442
+        image_id: ami-07caf09b362be10b8
         region: us-east-1
         key_name: Test
         vpc_subnet_id: subnet-0d981110c7439013c
@@ -110,8 +110,43 @@
         name:
           - git
           - docker
-        state: present
+        state: latest
+        
+    - name: Start Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
 
+    - name: Add ec2-user to Docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: true
+
+    - name: Fetch eshop from Git
+      git:
+        repo: 'https://github.com/nativesixs/4IT572_sem.git'
+        dest: ./app
+    
+    - name: Build Eshop Docker image
+      docker_image:
+        build:
+          path: ./app
+        name: eshop
+        tag: latest
+    
+    - name: Run Eshop Docker container
+      docker_container:
+        name: eshop
+        image: eshop
+        state: started
+        ports:
+          - "80:3000"
+
+    - name: Wait for Eshop to be accessible
+      wait_for:
+        port: 80
 
 # - name: Configure EC2 Instances
 #   hosts: launched
