@@ -2,11 +2,10 @@
 - name: Deploy to EC2
   hosts: localhost
   connection: local
-  vars:
+  # vars:
     aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
     aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
     aws_security_token: "{{ AWS_SESSION_TOKEN }}"
-    echo "$aws_access_key"
   tasks:
     - name: Launch EC2 Instance
       ec2_instance:
@@ -86,7 +85,7 @@
 
     - name: Fetch eshop from Git
       git:
-        repo: 'https://github.com/nativesixs/4IT572_docker.git'
+        repo: 'https://github.com/nativesixs/4IT572_sem.git'
         dest: ./app
     
     - name: Build Eshop Docker image
