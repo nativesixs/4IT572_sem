@@ -46,11 +46,11 @@
         state: directory
         mode: '0700'
 
-  - name: Create known hosts file
-    file:
-      path: ~/.ssh/known_hosts
-      state: touch
-      mode: '0600'
+    - name: Create known hosts file
+      file:
+        path: ~/.ssh/known_hosts
+        state: touch
+        mode: '0600'
 
     - name: Get Public IP Address
       set_fact:
