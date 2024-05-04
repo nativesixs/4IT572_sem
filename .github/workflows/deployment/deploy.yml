@@ -84,11 +84,11 @@
         timeout: 300
       loop: "{{ ec2_instance_result.instances }}"
 
-# - name: Test SSH connection with uptime
-#   hosts: launched
-#   tasks:
-#     - name: Run a simple command to check SSH
-#       command: uptime
+- name: Test SSH connection with uptime
+  hosts: launched
+  tasks:
+    - name: Run a simple command to check SSH
+      command: uptime
 
 # - name: Configure EC2 Instances
 #   hosts: launched
