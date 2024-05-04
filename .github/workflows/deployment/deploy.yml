@@ -2,10 +2,14 @@
 - name: Deploy to EC2
   hosts: localhost
   connection: local
+  # vars:
+  #   aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+  #   aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+  #   aws_security_token: "{{ AWS_SESSION_TOKEN }}"
   vars:
-    aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
-    aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
-    aws_security_token: "{{ AWS_SESSION_TOKEN }}"
+    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    aws_security_token: "{{ lookup('env', 'AWS_SESSION_TOKEN') }}"
   tasks:
     - name: Debug AWS Variables
       debug:
@@ -13,7 +17,7 @@
           - "AWS Access Key ID: {{ aws_access_key }}"
           - "AWS Secret Access Key: {{ aws_secret_key }}"
           - "AWS Security Token: {{ aws_security_token }}"
-          
+
     - name: Launch EC2 Instance
       ec2_instance:
         instance_type: t2.medium
