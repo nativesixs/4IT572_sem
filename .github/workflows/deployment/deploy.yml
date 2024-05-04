@@ -60,17 +60,17 @@
     #   command: ssh-keygen -R {{ ec2_public_ip }}
     #   ignore_errors: true
 
-    - name: Write SSH key to file
-      ansible.builtin.copy:
-        dest: /tmp/ssh_keys/Test.pem
-        content: "{{ ssh_key }}"
-        mode: '0600'
+    # - name: Write SSH key to file
+    #   ansible.builtin.copy:
+    #     dest: /tmp/ssh_keys/Test.pem
+    #     content: "{{ ssh_key }}"
+    #     mode: '0600'
     
-    - name: Configure SSH for Ansible
-      set_fact:
-        ansible_ssh_private_key_file: /tmp/ssh_keys/Test.pem
-        ansible_ssh_user: ec2-user
-        ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+    # - name: Configure SSH for Ansible
+    #   set_fact:
+    #     ansible_ssh_private_key_file: /tmp/ssh_keys/Test.pem
+    #     ansible_ssh_user: ec2-user
+    #     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 
     - name: Disable SSH Host Key Checking
       set_fact:
