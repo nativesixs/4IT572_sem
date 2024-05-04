@@ -38,20 +38,44 @@
       set_fact:
         ec2_public_ip: "{{ ec2_instance_result.instances[0].public_ip_address }}"
 
+
+# ssh
+    - name: Configure SSH key for EC2 access
+      set_fact:
+        ansible_ssh_private_key_file: "{{ ssh_key }}"
+    
+    - name: Create temporary directory
+      ansible.builtin.file:
+        path: /tmp/ssh_keys
+        state: directory
+
+    - name: Write SSH key to a file
+      ansible.builtin.copy:
+        dest: /tmp/ssh_keys/Test.pem
+        content: "{{ lookup('env', 'ssh_key') }}"
+        mode: '0600'
+
+    - name: Set SSH key for Ansible
+      set_fact:
+        ansible_ssh_private_key_file: /tmp/ssh_keys/Test.pem
+
+
+
     - name: Add EC2 Instance to Inventory
       add_host:
         hostname: "{{ ec2_public_ip }}"
         groupname: web-servers
+        ansible_ssh_user: ec2-user
 
     - name: Get new EC2 instance ID
       set_fact:
         new_instance_id: "{{ ec2_instance_result.instances[0].instance_id }}"
 
-    - name: Delete previous EC2 instances (excluding the new one)
-      amazon.aws.ec2_instance:
-        region: us-east-1
-        instance_ids: "{{ existing_instances.instances | map(attribute='instance_id') | difference([new_instance_id]) | list }}"
-        state: absent
+    # - name: Delete previous EC2 instances (excluding the new one)
+    #   amazon.aws.ec2_instance:
+    #     region: us-east-1
+    #     instance_ids: "{{ existing_instances.instances | map(attribute='instance_id') | difference([new_instance_id]) | list }}"
+    #     state: absent
 
     - name: Add instance host to group
       add_host:
@@ -66,54 +90,28 @@
     #   loop_control:
     #     loop_var: item
     #   loop: "{{ ec2_instance_result.instances }}"
-    - name: Configure SSH key for EC2 access
-      set_fact:
-        ansible_ssh_private_key_file: "{{ ssh_key }}"
 
     - name: Configure EC2 in Ansible inventory
       add_host:
         hostname: "{{ ec2_public_ip }}"
         groupname: web-servers
+        port: 80
+        
 
-- name: Install Docker, Git, and Deploy Docker Container
-  hosts: web-servers
-  gather_facts: yes
+- name: Install Docker and Git on EC2
+  hosts: ec2
   tasks:
+    - name: Ensure connection
+      wait_for_connection:
+        timeout: 300
+
     - name: Install Git and Docker
       ansible.builtin.package:
         name:
           - git
           - docker
         state: present
-    
-    - name: Start Docker service
-      ansible.builtin.service:
-        name: docker
-        state: started
-    
-    - name: Fetch Git repository
-      ansible.builtin.git:
-        repo: 'https://github.com/nativesixs/4IT572_sem.git'
-        dest: ./app
-    
-    - name: Build Eshop Docker image
-      docker_image:
-        build:
-          path: ./app
-        name: eshop
-        tag: latest
-    
-    - name: Run Eshop Docker container
-      docker_container:
-        name: eshop
-        image: eshop
-        state: started
-        ports:
-          - "80:3000"
 
-    - name: Wait for Eshop to be accessible
-      wait_for:
-        port: 80
 
 # - name: Configure EC2 Instances
 #   hosts: launched
