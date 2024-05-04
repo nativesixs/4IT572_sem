@@ -16,17 +16,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ansible
-          
-      - name: Check AWS Secrets
-        run: |
-          echo "AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}"
-          echo "AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}"
-          echo "AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}"
 
       - name: Run Ansible playbook
         run: |
-          # ansible-playbook .github/workflows/deployment/deploy.yml
-          ansible-playbook .github/workflows/deployment/deploy.yml -i .github/workflows/deployment/inventory.ini
+          printenv
+          ansible-playbook .github/workflows/deployment/deploy.yml -i .github/workflows/deployment/inventory.ini -vvv
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
