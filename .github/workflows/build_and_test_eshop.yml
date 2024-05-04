@@ -1,4 +1,4 @@
-name: Build and Test E-Shop
+name: Build and test eshop 
 
 on:
   pull_request:
@@ -10,29 +10,28 @@ on:
 jobs:
   Install:
     runs-on: ubuntu-latest
+
     steps:
       - name: Code checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.1
         with:
           token: ${{ secrets.WORKFLOW_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4.0.2
         with:
-          node-version: '14.x'
+          node-version: 14
 
-      - name: Cache node_modules
-        uses: actions/cache@v3
+      - name: Cache node modules
+        uses: actions/cache@v4.0.2
         with:
-          path: |
-            ~/.npm
-            node_modules
-          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            npm-${{ runner.os }}-
+          path: node_modules
+          key: node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: node_modules-
 
-      - name: Install npm packages
-        run: npm ci
+      - name: Install packages with npm
+        run: |
+          npm ci
 
   Build:
     needs: Install
@@ -74,9 +73,10 @@ jobs:
   Test:
     needs: Install
     runs-on: ubuntu-latest
+
     steps:
       - name: Code checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.1
         with:
           token: ${{ secrets.WORKFLOW_TOKEN }}
 
@@ -86,11 +86,41 @@ jobs:
           node-version: 14
 
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4.0.2
         with:
           path: node_modules
           key: node_modules-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run test
         run: |
-          npm run test -- --colors 
+          npm run test -- --colors    
+
+  Deploy: 
+    needs: [Build, Test]
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          token: ${{ secrets.WORKFLOW_TOKEN }}
+
+      - name: Load Node modules and build folder
+        uses: actions/cache@v4.0.2
+        with: 
+          path: |
+            ~/.npm
+            ./node_modules
+            ./build
+          key: ${{ runner.os }}-build-${{ github.run_id }}
+
+      - name: Deploy to Firebase
+        uses: lowply/deploy-firebase@v0.0.5
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_PROJECT: zencak-devops
+
+
+
+      
