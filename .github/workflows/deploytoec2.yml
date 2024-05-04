@@ -22,15 +22,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install botocore boto3
 
-      - name: Check Ansible and Python Setup
+      - name: Install AWS libraries in Ansible environment
         run: |
-          ansible --version
-          python --version
-          which python
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install --upgrade pip
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install botocore boto3
 
-      - name: Get Ansible configuration
-        run: |
-          ansible-config dump
+      # - name: Check Ansible and Python Setup
+      #   run: |
+      #     ansible --version
+      #     python --version
+      #     which python
+
+      # - name: Get Ansible configuration
+      #   run: |
+      #     ansible-config dump
 
       - name: Run Ansible playbook
         run: ansible-playbook .github/workflows/deployment/deploy.yml -i .github/workflows/deployment/inventory.ini
