@@ -1,0 +1,52 @@
+name: Build and Test E-Shop
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  Install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14.x'
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+
+      - name: Install npm packages
+        run: npm ci
+
+  Build:
+    needs: Install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build project
+        run: |
+          npm rebuild node-sass --force
+          npm run build -- --colors
+
+  Test:
+    needs: Install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        run: |
+          npm run test -- --colors
