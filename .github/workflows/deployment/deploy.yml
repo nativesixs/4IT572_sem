@@ -40,25 +40,25 @@
         groupname: launched
       loop: "{{ ec2_instance_result.instances }}"
 
-    - name: Create SSH directory
-      file:
-        path: ~/.ssh
-        state: directory
-        mode: '0700'
+    # - name: Create SSH directory
+    #   file:
+    #     path: ~/.ssh
+    #     state: directory
+    #     mode: '0700'
 
-    - name: Create known hosts file
-      file:
-        path: ~/.ssh/known_hosts
-        state: touch
-        mode: '0600'
+    # - name: Create known hosts file
+    #   file:
+    #     path: ~/.ssh/known_hosts
+    #     state: touch
+    #     mode: '0600'
 
     - name: Get Public IP Address
       set_fact:
         ec2_public_ip: "{{ ec2_instance_result.instances[0].public_ip_address }}"
 
-    - name: Clear SSH Known Hosts
-      command: ssh-keygen -R {{ ec2_public_ip }}
-      ignore_errors: true
+    # - name: Clear SSH Known Hosts
+    #   command: ssh-keygen -R {{ ec2_public_ip }}
+    #   ignore_errors: true
 
     - name: Write SSH key to file
       ansible.builtin.copy:
