@@ -121,6 +121,7 @@
         state: started
         enabled: yes
 
+
     - name: Add ec2-user to Docker group
       user:
         name: ec2-user
