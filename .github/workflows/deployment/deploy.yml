@@ -3,9 +3,9 @@
   hosts: localhost
   connection: local
   vars:
-    aws_access_key: "{{ secrets.AWS_ACCESS_KEY }}"
-    aws_secret_key: "{{ secrets.AWS_SECRET_KEY }}"
-    aws_security_token: "{{ secrets.AWS_SESSION_TOKEN }}"
+    aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+    aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+    aws_security_token: "{{ AWS_SESSION_TOKEN }}"
 
   tasks:
     - name: Launch EC2 Instance
@@ -22,17 +22,25 @@
           assign_public_ip: yes
         wait: yes
         security_groups: [eshop]
-        aws_access_key: "{{ secrets.AWS_ACCESS_KEY }}"
-        aws_secret_key: "{{ secrets.AWS_SECRET_KEY }}"
-        security_token: "{{ secrets.AWS_SESSION_TOKEN }}"
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        security_token: "{{ AWS_SESSION_TOKEN }}"
       register: ec2_instance_result
+    - name: Get Public IP Address
+      set_fact:
+        ec2_public_ip: "{{ ec2_instance_result.instances[0].public_ip_address }}"
 
+    - name: Add EC2 Instance to Inventář
+      add_host:
+        hostname: "{{ ec2_public_ip }}"
+        groupname: web-servers
+        
     - name: Delete previous EC2 Instances
       ec2_instance:
         region: us-east-1
-        aws_access_key: "{{ secrets.AWS_ACCESS_KEY }}"
-        aws_secret_key: "{{ secrets.AWS_SECRET_KEY }}"
-        security_token: "{{ secrets.AWS_SESSION_TOKEN }}"
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        security_token: "{{ AWS_SESSION_TOKEN }}"
         instance_ids: "{{ ec2_instance_result.instances | map(attribute='instance_id') | list }}"
         state: absent
 
