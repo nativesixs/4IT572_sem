@@ -10,13 +10,13 @@
     aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
     aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
     aws_security_token: "{{ lookup('env', 'AWS_SESSION_TOKEN') }}"
+    ansible_python_interpreter: "/opt/pipx/venvs/ansible-core/bin/python"
+    
   tasks:
-    - name: Debug AWS Variables
-      debug:
-        msg:
-          - "AWS Access Key ID: {{ aws_access_key }}"
-          - "AWS Secret Access Key: {{ aws_secret_key }}"
-          - "AWS Security Token: {{ aws_security_token }}"
+    - name: Install AWS Python Libraries
+      run: |
+        python -m pip install --upgrade pip
+        pip install botocore boto3
 
     - name: Launch EC2 Instance
       ec2_instance:
