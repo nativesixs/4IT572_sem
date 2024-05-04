@@ -40,6 +40,10 @@
         groupname: launched
       loop: "{{ ec2_instance_result.instances }}"
 
+    - name: Get Public IP Address
+      set_fact:
+        ec2_public_ip: "{{ ec2_instance_result.instances[0].public_ip_address }}"
+        
     - name: Clear SSH Known Hosts
       command: ssh-keygen -R {{ ec2_public_ip }}
 
