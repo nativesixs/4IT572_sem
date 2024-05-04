@@ -26,4 +26,3 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }} 
         run: echo "$AWS_ACCESS_KEY_ID"
-        run: echo "$AWS_SECRET_ACCESS_KEY"
