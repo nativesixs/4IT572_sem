@@ -9,14 +9,13 @@ on:
 
 jobs:
   Install:
-    steps:
-    # runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-    # steps:
-    #   - name: Code checkout
-    #     uses: actions/checkout@v4.1.1
-    #     with:
-    #       token: ${{ secrets.WORKFLOW_TOKEN }}
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          token: ${{ secrets.WORKFLOW_TOKEN }}
 
     #   - name: Setup NodeJS
     #     uses: actions/setup-node@v4.0.2
@@ -35,15 +34,14 @@ jobs:
     #       npm ci
 
   Build:
-    steps:
-    # needs: Install
-    # runs-on: ubuntu-latest
+    needs: Install
+    runs-on: ubuntu-latest
 
-    # steps:
-    #   - name: Code checkout
-    #     uses: actions/checkout@v4.1.1
-    #     with:
-    #       token: ${{ secrets.WORKFLOW_TOKEN }}
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          token: ${{ secrets.WORKFLOW_TOKEN }}
 
     #   - name: Setup NodeJS
     #     uses: actions/setup-node@v4.0.2
@@ -73,15 +71,14 @@ jobs:
     #       restore-keys: ${{ runner.os }}-build-${{ github.run_id }}
 
   Test:
-    steps:
-    # needs: Install
-    # runs-on: ubuntu-latest
+    needs: Install
+    runs-on: ubuntu-latest
 
-    # steps:
-    #   - name: Code checkout
-    #     uses: actions/checkout@v4.1.1
-    #     with:
-    #       token: ${{ secrets.WORKFLOW_TOKEN }}
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          token: ${{ secrets.WORKFLOW_TOKEN }}
 
     #   - name: Setup NodeJS
     #     uses: actions/setup-node@v4.0.2
