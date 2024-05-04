@@ -26,7 +26,7 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v4.0.2
         with:
-          path: node_modulesss
+          path: node_modules_smth
           key: node_modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: node_modules-
 
