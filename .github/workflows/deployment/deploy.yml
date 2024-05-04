@@ -101,6 +101,8 @@
 
 - name: Install Docker and Git on EC2
   hosts: ec2
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
   tasks:
     - name: Ensure connection
       wait_for_connection:
