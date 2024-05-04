@@ -58,13 +58,14 @@
     - name: Set SSH key for Ansible
       set_fact:
         ansible_ssh_private_key_file: /tmp/ssh_keys/Test.pem
+        ansible_ssh_user: ec2-user
 
 
 
     - name: Add EC2 Instance to Inventory
       add_host:
         hostname: "{{ ec2_public_ip }}"
-        groupname: web-servers
+        groupname: ec2
         ansible_ssh_user: ec2-user
 
     - name: Get new EC2 instance ID
@@ -111,7 +112,7 @@
           - git
           - docker
         state: latest
-        
+
     - name: Start Docker
       service:
         name: docker
