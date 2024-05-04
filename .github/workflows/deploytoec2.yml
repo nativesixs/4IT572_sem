@@ -1,0 +1,29 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+      - name: Ansible playbook to deploy to EC2
+        uses: appleboy/ansible-action@v1.2.2
+        with:
+          playbook: deployment/deploy.yml
+          # inventory: deployment/inventory.ini
+          extra_vars: |
+            aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+            aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+            aws_region: us-east-1
+            key_name: Test
