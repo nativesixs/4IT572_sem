@@ -85,7 +85,7 @@
       loop: "{{ ec2_instance_result.instances }}"
 
     - name: Install Git and Docker
-      yum:
+      apt:
         name:
           - git
           - docker
