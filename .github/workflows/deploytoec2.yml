@@ -18,20 +18,12 @@ jobs:
           sudo apt-get install -y ansible
 
       - name: Run Ansible playbook
-        uses: dawidd6/action-ansible-playbook@v2.8.0
-        with:
-          # Required, playbook filepath
-          playbook: .github/workflows/deployment/deploy.yml
-          # Optional, SSH private key
-          # key: ${{secrets.SSH_PRIVATE_KEY}}
-          options: |
-            --extra-vars AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_KEY }} AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }} 
-            --verbose
-      # - name: Run Ansible playbook
-      #   run: |
-      #     # ansible-playbook .github/workflows/deployment/deploy.yml
-      #     ansible-playbook .github/workflows/deployment/deploy.yml -i .github/workflows/deployment/inventory.ini --extra-vars "host=$secrets.INFLUXDB_PASS"
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
-      #     AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }} 
+        run: |
+          # ansible-playbook .github/workflows/deployment/deploy.yml
+          ansible-playbook .github/workflows/deployment/deploy.yml -i .github/workflows/deployment/inventory.ini
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }} 
+        run: echo "$AWS_ACCESS_KEY_ID"
+        run: echo "$AWS_SECRET_ACCESS_KEY"
