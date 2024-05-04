@@ -9,6 +9,10 @@
     ansible_python_interpreter: "/opt/pipx/venvs/ansible-core/bin/python"
 
   tasks:
+    - name: Get existing EC2 instances
+      ec2_instance_facts:
+        region: us-east-1
+      register: existing_instances
     
     - name: Launch EC2 Instance
       ec2_instance:
