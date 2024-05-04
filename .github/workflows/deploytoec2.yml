@@ -26,6 +26,7 @@ jobs:
         run: |
           /opt/pipx/venvs/ansible-core/bin/python -m pip install --upgrade pip
           /opt/pipx/venvs/ansible-core/bin/python -m pip install botocore boto3
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install docker boto3 requests
 
       # - name: Check Ansible and Python Setup
       #   run: |
