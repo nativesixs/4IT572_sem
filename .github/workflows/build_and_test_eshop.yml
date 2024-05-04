@@ -1,6 +1,5 @@
 name: Build and test eshop 
 
-
 on:
   pull_request:
     branches:
@@ -16,7 +15,8 @@ jobs:
       - name: Code checkout
         uses: actions/checkout@v4.1.1
         with:
-          token: ${{ secrets.WORKFLOW_TOKEN }}
+          # token: ${{ secrets.WORKFLOW_TOKEN }}
+          token: ${{ secrets.tttt }}
 
       - name: Setup NodeJS
         uses: actions/setup-node@v4.0.2
@@ -26,7 +26,7 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v4.0.2
         with:
-          path: node_modules_smth
+          path: node_modules
           key: node_modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: node_modules-
 
