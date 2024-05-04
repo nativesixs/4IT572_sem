@@ -67,8 +67,6 @@
         timeout: 300  
         host: "{{ ec2_public_ip }}"
         port: 22 
-        user: ec2-user
-        private_key_file: /tmp/ssh_keys/Test.pem
 
     - name: Add EC2 Instance to Inventory
       add_host:
