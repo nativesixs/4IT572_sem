@@ -105,6 +105,13 @@
       git:
         repo: 'https://github.com/nativesixs/4IT572_sem.git'
         dest: ./app
+
+    - name: Install Ansible dependencies
+      pip:
+        name:
+          - requests
+          - docker
+          - boto3
     
     - name: Build Eshop Docker image
       become: yes
