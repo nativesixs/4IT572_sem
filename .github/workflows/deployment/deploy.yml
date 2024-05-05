@@ -51,24 +51,16 @@
       set_fact:
         ec2_public_ip: "{{ ec2_instance_result.instances[0].public_ip_address }}"
 
-    - name: Create directory for SSH key
-      become: yes 
-      file:
-        path: /home/ec2-user/.ssh
-        state: directory
-        mode: '0700'
+    - name: Ensure SSH directory exists
+    file:
+      path: ~/.ssh
+      state: directory
+      mode: '0700'  # Secure permissions for the SSH directory
 
-    - name: Create Test.pem with SSH key content
-      become: yes 
-      copy:
-        content: "{{ ssh_key }}"  
-        # dest: /home/ec2-user/.ssh/Test.pem  
-        dest: /home/ec2-user/.ssh/devops.pem  
-        mode: '0600'  
-
-    - name: Clear SSH Known Hosts
-      command: ssh-keygen -R {{ ec2_public_ip }}  
-      ignore_errors: true  
+    - name: Add EC2 instance to known_hosts
+      shell: |
+        ssh-keyscan {{ ec2_public_ip }} >> ~/.ssh/known_hosts
+      become: yes  # To ensure you have the right permissions 
 
     - name: Disable SSH Host Key Checking
       set_fact:
