@@ -70,6 +70,10 @@
         dest: /home/ec2-user/.ssh/Test.pem  # Path to save the SSH key
         mode: '0600'  # Set appropriate permissions to keep the key secure
 
+    - name: Clear SSH Known Hosts
+      command: ssh-keygen -R {{ ec2_public_ip }}  # Replace with the IP of your EC2 instance
+      ignore_errors: true  # Continue even if the entry doesn't exist
+
     - name: Disable SSH Host Key Checking
       set_fact:
         ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
