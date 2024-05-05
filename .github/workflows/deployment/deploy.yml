@@ -84,6 +84,12 @@
         timeout: 300
       loop: "{{ ec2_instance_result.instances }}"
 
+- name: Configure EC2 Instances
+  hosts: launched
+  connection: ssh
+  become: yes
+  tasks:
+
     - name: Install Git and Docker
       become: yes
       apt:
