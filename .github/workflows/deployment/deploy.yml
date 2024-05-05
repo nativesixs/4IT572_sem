@@ -17,11 +17,17 @@
     
     - name: Launch EC2 Instance
       ec2_instance:
+        # instance_type: t2.medium
+        # image_id: ami-07caf09b362be10b8
+        # region: us-east-1
+        # key_name: Test
+        # vpc_subnet_id: subnet-0d981110c7439013c
         instance_type: t2.medium
         image_id: ami-07caf09b362be10b8
         region: us-east-1
-        key_name: Test
+        key_name: devops
         vpc_subnet_id: subnet-0d981110c7439013c
+
         tags:
           Name: Eshop
         count: 1
@@ -40,50 +46,35 @@
         groupname: launched
       loop: "{{ ec2_instance_result.instances }}"
 
-    # - name: Create SSH directory
-    #   file:
-    #     path: ~/.ssh
-    #     state: directory
-    #     mode: '0700'
-
-    # - name: Create known hosts file
-    #   file:
-    #     path: ~/.ssh/known_hosts
-    #     state: touch
-    #     mode: '0600'
-
 
     - name: Get Public IP Address
       set_fact:
         ec2_public_ip: "{{ ec2_instance_result.instances[0].public_ip_address }}"
 
     - name: Create directory for SSH key
-      become: yes  # Ensure privilege escalation for this task
+      become: yes 
       file:
-        path: /home/ec2-user/.ssh  # Use the correct home directory
+        path: /home/ec2-user/.ssh
         state: directory
-        mode: '0700'  # Secure permissions for the SSH directory
+        mode: '0700'
 
     - name: Create Test.pem with SSH key content
-      become: yes  # Required for writing to the .ssh directory
+      become: yes 
       copy:
-        content: "{{ ssh_key }}"  # The content of your SSH key variable
-        dest: /home/ec2-user/.ssh/Test.pem  # Path to save the SSH key
-        mode: '0600'  # Set appropriate permissions to keep the key secure
+        content: "{{ ssh_key }}"  
+        # dest: /home/ec2-user/.ssh/Test.pem  
+        dest: /home/ec2-user/.ssh/devops.pem  
+        mode: '0600'  
 
     - name: Clear SSH Known Hosts
-      command: ssh-keygen -R {{ ec2_public_ip }}  # Replace with the IP of your EC2 instance
-      ignore_errors: true  # Continue even if the entry doesn't exist
+      command: ssh-keygen -R {{ ec2_public_ip }}  
+      ignore_errors: true  
 
     - name: Disable SSH Host Key Checking
       set_fact:
         ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
         ansible_ssh_user: ec2-user
 
-    - name: Display SSH key content
-      debug:
-        msg: "SSH key content is: {{ ssh_key }}"
-        
     - name: Wait for SSH connection
       delegate_to: "{{ item.public_dns_name }}"
       wait_for_connection:
