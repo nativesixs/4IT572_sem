@@ -80,6 +80,10 @@
         ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
         ansible_ssh_user: ec2-user
 
+    - name: Display SSH key content
+      debug:
+        msg: "SSH key content is: {{ ssh_key }}"
+        
     - name: Wait for SSH connection
       delegate_to: "{{ item.public_dns_name }}"
       wait_for_connection:
