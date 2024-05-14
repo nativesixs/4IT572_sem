@@ -21,7 +21,7 @@
         state: "absent"
         region: us-east-1
         instance_ids: "{{ existing_instances.instances | selectattr('tags.Name', 'equalto', instance_tag) | map(attribute='instance_id') | list }}"
-      when: existing_instances.instances | selectattr('tags.Name', 'equalto', instance_tag) | list | count > 0
+      when: existing_instances.instances | selectattr('tags.Name', 'equalto', instance_tag) | list is not none and existing_instances.instances | selectattr('tags.Name', 'equalto', instance_tag) | list | count > 0
 
     
     - name: Launch EC2 Instance
