@@ -15,9 +15,7 @@ jobs:
       - name: Code checkout
         uses: actions/checkout@v4.1.1
         with:
-          # token: ${{ secrets.WORKFLOW_TOKEN }}
-          token: ${{ secrets.dfghWORdfghKFLfghOW_TOdfhKENasd }}
-
+          token: ${{ secrets.WORKFLOW_TOKEN }}
       - name: Setup NodeJS
         uses: actions/setup-node@v4.0.2
         with:
@@ -27,8 +25,7 @@ jobs:
         uses: actions/cache@v4.0.2
         with:
           path: node_modules
-          # key: node_modules-${{ hashFiles('**/package-lock.json') }}
-          key: node_moes-${{ hashFiles('/packagedfgdfg-lock.json') }}
+          key: node_modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: node_modules-
 
       - name: Install packages with npm
@@ -45,32 +42,32 @@ jobs:
         with:
           token: ${{ secrets.WORKFLOW_TOKEN }}
 
-    #   - name: Setup NodeJS
-    #     uses: actions/setup-node@v4.0.2
-    #     with:
-    #       node-version: 14
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 14
 
-    #   - name: Cache node modules
-    #     uses: actions/cache@v4.0.2
-    #     with:
-    #       path: node_modules
-    #       key: node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Cache node modules
+        uses: actions/cache@v4.0.2
+        with:
+          path: node_modules
+          key: node_modules-${{ hashFiles('**/package-lock.json') }}
 
-    #   - name: Build
-    #     run: |
-    #       npm rebuild node-sass --force
-    #       npm run build -- --colors
+      - name: Build
+        run: |
+          npm rebuild node-sass --force
+          npm run build -- --colors
 
-    #   - name: Cache node modules and build folder
-    #     if: ${{ github.ref == 'refs/heads/main' }}
-    #     uses: actions/cache@v4.0.2
-    #     with: 
-    #       path: |
-    #         ~/.npm
-    #         ./node_modules
-    #         ./build
-    #       key: ${{ runner.os }}-build-${{ github.run_id }}
-    #       restore-keys: ${{ runner.os }}-build-${{ github.run_id }}
+      - name: Cache node modules and build folder
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: actions/cache@v4.0.2
+        with: 
+          path: |
+            ~/.npm
+            ./node_modules
+            ./build
+          key: ${{ runner.os }}-build-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-build-${{ github.run_id }}
 
   Test:
     needs: Install
@@ -82,20 +79,20 @@ jobs:
         with:
           token: ${{ secrets.WORKFLOW_TOKEN }}
 
-    #   - name: Setup NodeJS
-    #     uses: actions/setup-node@v4.0.2
-    #     with:
-    #       node-version: 14
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 14
 
-    #   - name: Cache node modules
-    #     uses: actions/cache@v4.0.2
-    #     with:
-    #       path: node_modules
-    #       key: node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Cache node modules
+        uses: actions/cache@v4.0.2
+        with:
+          path: node_modules
+          key: node_modules-${{ hashFiles('**/package-lock.json') }}
 
-    #   - name: Run test
-    #     run: |
-    #       npm run test -- --colors    
+      - name: Run test
+        run: |
+          npm run test -- --colors    
 
 
 
