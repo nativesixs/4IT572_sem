@@ -23,7 +23,7 @@
         instance_ids: "{{ existing_instances.instances | selectattr('tags.Name', 'equalto', instance_tag) | map(attribute='instance_id') | list }}"
       when: existing_instances.instances | selectattr('tags.Name', 'equalto', instance_tag) | list is not none and existing_instances.instances | selectattr('tags.Name', 'equalto', instance_tag) | list | count > 0
 
-    
+  
     - name: Launch EC2 Instance
       ec2_instance:
         # instance_type: t2.medium
