@@ -17,7 +17,7 @@
       register: existing_instances
 
     - name: Terminate previous instances with tag
-      ec2:
+      ec2_instance:
         state: "absent"
         region: us-east-1
         instance_ids: "{{ existing_instances.instances | selectattr('tags.Name', 'equalto', instance_tag) | map(attribute='instance_id') | list }}"
