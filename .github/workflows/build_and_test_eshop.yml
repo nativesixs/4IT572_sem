@@ -15,7 +15,8 @@ jobs:
       - name: Code checkout
         uses: actions/checkout@v4.1.1
         with:
-          token: ${{ secrets.WORKFLOW_TOKEN }}
+          # token: ${{ secrets.WORKFLOW_TOKEN }}
+          token: ${{ secrets.dfghWORdfghKFLfghOW_TOdfhKENasd }}
 
       - name: Setup NodeJS
         uses: actions/setup-node@v4.0.2
@@ -27,7 +28,7 @@ jobs:
         with:
           path: node_modules
           # key: node_modules-${{ hashFiles('**/package-lock.json') }}
-          key: node_modules-${{ hashFiles('/packagedfgdfg-lock.json') }}
+          key: node_moes-${{ hashFiles('/packagedfgdfg-lock.json') }}
           restore-keys: node_modules-
 
       - name: Install packages with npm
