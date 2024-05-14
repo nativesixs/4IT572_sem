@@ -17,21 +17,22 @@ jobs:
         with:
           token: ${{ secrets.WORKFLOW_TOKEN }}
 
-    #   - name: Setup NodeJS
-    #     uses: actions/setup-node@v4.0.2
-    #     with:
-    #       node-version: 14
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 14
 
-    #   - name: Cache node modules
-    #     uses: actions/cache@v4.0.2
-    #     with:
-    #       path: node_modules
-    #       key: node_modules-${{ hashFiles('**/package-lock.json') }}
-    #       restore-keys: node_modules-
+      - name: Cache node modules
+        uses: actions/cache@v4.0.2
+        with:
+          path: node_modules
+          # key: node_modules-${{ hashFiles('**/package-lock.json') }}
+          key: node_modules-${{ hashFiles('/packagedfgdfg-lock.json') }}
+          restore-keys: node_modules-
 
-    #   - name: Install packages with npm
-    #     run: |
-    #       npm ci
+      - name: Install packages with npm
+        run: |
+          npm ci
 
   Build:
     needs: Install
