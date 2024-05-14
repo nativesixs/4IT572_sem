@@ -8,12 +8,21 @@
     aws_security_token: "{{ lookup('env', 'AWS_SESSION_TOKEN') }}"
     ssh_key: "{{ lookup('env', 'SSH_KEY') }}"
     ansible_python_interpreter: "/opt/pipx/venvs/ansible-core/bin/python"
+    instance_tag: "toBeReplaced"
 
   tasks:
     - name: Get existing EC2 instances
       amazon.aws.ec2_instance_info:
         region: us-east-1
       register: existing_instances
+
+    - name: Terminate previous instances with tag
+      ec2:
+        state: "absent"
+        region: us-east-1
+        instance_ids: "{{ existing_instances.instances | selectattr('tags.Name', 'equalto', instance_tag) | map(attribute='instance_id') | list }}"
+      when: existing_instances.instances | selectattr('tags.Name', 'equalto', instance_tag) | list | count > 0
+
     
     - name: Launch EC2 Instance
       ec2_instance:
@@ -27,9 +36,9 @@
         region: us-east-1
         key_name: devops
         vpc_subnet_id: subnet-0d981110c7439013c
-
         tags:
-          Name: Eshop
+          Name: "{{ instance_tag }}"
+          Environment: Eshop
         count: 1
         network:
           assign_public_ip: yes
@@ -46,21 +55,22 @@
         groupname: launched
       loop: "{{ ec2_instance_result.instances }}"
 
-
     - name: Get Public IP Address
       set_fact:
         ec2_public_ip: "{{ ec2_instance_result.instances[0].public_ip_address }}"
+
+
 
     - name: Ensure SSH directory exists
       file:
         path: ~/.ssh
         state: directory
-        mode: '0700'  # Secure permissions for the SSH directory
+        mode: '0700'
 
     - name: Add EC2 instance to known_hosts
       shell: |
         ssh-keyscan {{ ec2_public_ip }} >> ~/.ssh/known_hosts
-      become: yes  # To ensure you have the right permissions 
+      become: yes
 
     - name: Disable SSH Host Key Checking
       set_fact:
@@ -80,6 +90,7 @@
   connection: ssh
   become: yes
   tasks:
+
 
     - name: Install Git and Docker
       become: yes
